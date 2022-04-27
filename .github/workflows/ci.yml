@@ -18,29 +18,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
-        host:
-          - x64
-        target:
-          - x64
-        node:
-          - 10
-          - 11
-          - 12
-          - 13
-          - 14
-          - 15
-          - 16
-          - 17
-          - 18
         include:
-          - os: windows-latest
+          - os: macos-latest
             node: 16
-            host: x86
-            target: x86
+            host: x64
+            target: arm64
     name: ${{ matrix.os }} (node=${{ matrix.node }}, host=${{ matrix.host }}, target=${{ matrix.target }})
     steps:
       - uses: actions/checkout@v3
@@ -81,6 +63,10 @@ jobs:
       - name: Build binaries
         run: yarn node-pre-gyp build --target_arch=${{ env.TARGET }}
 
+      - name: Codesign Darwin ARM64 binaries
+        if: contains(matrix.os, 'macos') && matrix.target == 'arm64'
+        run: codesign -s - -f -vvvvvv lib/binding/napi-v*/*
+
       - name: Print binary info
         if: contains(matrix.os, 'ubuntu')
         run: |
@@ -92,6 +78,7 @@ jobs:
 
       - name: Run tests
         run: yarn test
+        if: matrix.target != 'arm64'
 
       - name: Package prebuilt binaries
         run: yarn node-pre-gyp package --target_arch=${{ env.TARGET }}
