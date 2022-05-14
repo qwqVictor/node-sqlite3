@@ -41,6 +41,10 @@ jobs:
             node: 16
             host: x86
             target: x86
+          - os: windows-latest
+            node: 16
+            host: x64
+            target: arm64
     name: ${{ matrix.os }} (node=${{ matrix.node }}, host=${{ matrix.host }}, target=${{ matrix.target }})
     steps:
       - uses: actions/checkout@v3
