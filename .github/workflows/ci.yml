@@ -18,29 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
-        host:
-          - x64
-        target:
-          - x64
-        node:
-          - 10
-          - 11
-          - 12
-          - 13
-          - 14
-          - 15
-          - 16
-          - 17
-          - 18
         include:
-          - os: windows-latest
-            node: 16
-            host: x86
-            target: x86
           - os: windows-latest
             node: 16
             host: x64
